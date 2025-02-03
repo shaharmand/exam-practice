@@ -1,6 +1,9 @@
 import { useEffect, useRef } from 'react'
 import { MathfieldElement } from 'mathlive'
 
+// Register the MathLive web component
+import 'mathlive'
+
 interface MathFieldProps {
   value: string
   onChange: (value: string) => void
@@ -12,9 +15,17 @@ export function MathField({ value, onChange, placeholder }: MathFieldProps) {
 
   useEffect(() => {
     if (!mathFieldRef.current) {
+      // Create the mathfield element
       const mathField = new MathfieldElement()
+      
+      // Set initial value
       mathField.value = value
-      mathField.placeholder = placeholder || 'Enter your math solution...'
+      
+      // Set attributes
+      mathField.setAttribute('virtual-keyboard-mode', 'manual')
+      mathField.setAttribute('smart-mode', 'true')
+      mathField.setAttribute('smart-fence', 'true')
+      mathField.setAttribute('smart-superscript', 'true')
       
       // Apply styles
       mathField.style.width = '100%'
@@ -25,10 +36,12 @@ export function MathField({ value, onChange, placeholder }: MathFieldProps) {
       mathField.style.fontSize = '1.125rem'
       mathField.style.backgroundColor = 'transparent'
       
+      // Add event listener for changes
       mathField.addEventListener('input', () => {
         onChange(mathField.value)
       })
 
+      // Mount the element
       const container = document.getElementById('math-field-container')
       if (container) {
         container.appendChild(mathField)
@@ -37,10 +50,13 @@ export function MathField({ value, onChange, placeholder }: MathFieldProps) {
     }
 
     return () => {
-      mathFieldRef.current?.remove()
+      if (mathFieldRef.current) {
+        mathFieldRef.current.remove()
+      }
     }
   }, [])
 
+  // Update value when prop changes
   useEffect(() => {
     if (mathFieldRef.current && mathFieldRef.current.value !== value) {
       mathFieldRef.current.value = value
