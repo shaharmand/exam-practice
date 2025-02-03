@@ -1,7 +1,7 @@
 'use client'
 
 import { QuestionDisplay } from "@/components/QuestionDisplay"
-import { Select } from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useState } from "react"
 
 const subjects = [
@@ -33,12 +33,18 @@ export function QuestionSection({ questions }: QuestionSectionProps) {
         <label htmlFor="subject" className="text-sm font-medium">
           Select Subject
         </label>
-        <Select
-          id="subject"
-          defaultValue={selectedSubject}
-          items={subjects}
-          onValueChange={setSelectedSubject}
-        />
+        <Select value={selectedSubject} onValueChange={setSelectedSubject}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select a subject" />
+          </SelectTrigger>
+          <SelectContent>
+            {subjects.map((subject) => (
+              <SelectItem key={subject.value} value={subject.value}>
+                {subject.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="space-y-6">
